@@ -1,6 +1,7 @@
 // 1. Adicione um SCA a pipeline abaixo
-// 2. Guarde os resultados em um artefato
-// 3. Adicione um dast ao link -> http://testphp.vulnweb.com/
+// 2. Não permita que o build falhe mesmo que vulnerabilidades sejam encontradas
+// 3. Guarde os resultados em um artefato
+// 4. Adicione um dast ao link -> http://testphp.vulnweb.com/
 
 pipeline {
   agent any
@@ -13,7 +14,7 @@ pipeline {
     stage ('NPM audit') {
       steps {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-           sh 'npm audit --json'
+           sh 'npm audit --json | tee audit-output.json'
         }
       }
     }
@@ -33,4 +34,9 @@ pipeline {
         }
       }
     }
+  post {
+    always {
+      archiveArtifacts 'audit-output.json'
+    }
   }
+}
