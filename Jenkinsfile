@@ -11,13 +11,6 @@ pipeline {
          sh 'npm install'
         }
     }
-    stage ('NPM audit') {
-      steps {
-        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-           sh 'npm audit --json | tee audit-output.json'
-        }
-      }
-    }
     stage('test') {
         steps {
           sh 'echo "Testing"'
@@ -28,15 +21,5 @@ pipeline {
           sh 'echo "deploying"'
         }
       }
-    stage('Baseline Dast Scan') {
-        steps {
-          sh 'docker run -t owasp/zap2docker-stable zap-baseline.py -t http://testphp.vulnweb.com/'
-        }
-      }
-    }
-  post {
-    always {
-      archiveArtifacts 'audit-output.json'
     }
   }
-}
