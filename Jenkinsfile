@@ -1,5 +1,6 @@
 // 1. Adicione um SCA a pipeline abaixo
 // 2. Guarde os resultados em um artefato
+// 3. Adicione um dast ao link -> http://testphp.vulnweb.com/
 
 pipeline {
   agent any
@@ -9,14 +10,19 @@ pipeline {
          sh 'npm install'
         }
     }
+    stage ('NPM audit') {
+      stage {
+        sh 'npm audit --json'
+      }
+    }
     stage('test') {
         steps {
-          sh 'echo "Rodando testes de integração"'
+          sh 'echo "Testing"'
         }
     }
     stage('deploy') {
         steps {
-          sh 'echo "Fazendo deploy do APP"'
+          sh 'echo "deploying"'
         }
       }
     }
