@@ -12,7 +12,9 @@ pipeline {
     }
     stage ('NPM audit') {
       steps {
-        sh 'npm audit --json'
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+           sh 'npm audit --json'
+        }
       }
     }
     stage('test') {
