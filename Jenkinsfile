@@ -11,7 +11,7 @@ pipeline {
         }
     }
     stage ('NPM audit') {
-      stage {
+      steps {
         sh 'npm audit --json'
       }
     }
